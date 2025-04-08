@@ -5,9 +5,10 @@ import React from 'react'
 
 export default async function ServiceDetailsPage({ params }) {
     const p = await params;
-    const data = await dbConnect(collectionNames.servicesCollection).findOne({ _id: new ObjectId(p.id) });
+    const res = await fetch(`http://localhost:3000/api/service/${p.id}`)
+    const data = await res.json();
     return (
-        <div className='max-w-[1137px] mx-auto'>
+        <div className='max-w-[1137px] mx-auto pt-2 mb-20'>
             <section className='flex justify-center'>
                 <figure className=' relative'>
                     <Image
@@ -26,9 +27,29 @@ export default async function ServiceDetailsPage({ params }) {
                 </figure>
             </section>
 
-            <section>
-                <Image src={data.img} width={400} height={280} alt={data.title} />
-                <h1 className='text-2xl font-bold'>{data.title}</h1>
+            <section className='grid grid-cols-12 gap-4 mt-8'>
+                <div className='col-span-9'>
+                    <figure >
+                        <Image
+                            className='w-full h-full object-fill rounded'
+                            src={data.img}
+                            width={752} height={400}
+                            alt={data.title} />
+                    </figure>
+                    <div className=''>
+                        <h3 className='text-xl font-bold my-8'>{data.title}</h3>
+                        <p className='textarea-accent'>{data.description}</p>
+                    </div>
+                </div>
+
+                <div className='col-span-3'>
+                    <h1 className='text-2xl font-bold mb-4'>
+                        Price: ${data.price}
+                    </h1>
+                    <button className='bg-orange-500 text-white w-full py-2 rounded cursor-pointer'>
+                        Checkout
+                    </button>
+                </div>
             </section>
         </div>
     )
